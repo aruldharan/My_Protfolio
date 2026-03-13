@@ -113,7 +113,7 @@ const HeroSection = () => {
             />
             <div className="absolute inset-0 rounded-[32px] glass border border-primary/20 overflow-hidden gold-glow-strong z-10 transition-transform duration-500 group-hover:scale-105">
               <img 
-                src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&h=400&fit=crop" 
+                src="/ARUL-PIC.jpg" 
                 alt="Arul Dharan S" 
                 className="w-full h-full object-cover grayscale brightness-90 group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700"
               />

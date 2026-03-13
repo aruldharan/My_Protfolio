@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, MapPin, Phone, Send } from "lucide-react";
+import { API_BASE_URL } from "@/lib/api-config";
 
 const ContactSection = () => {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
@@ -22,7 +23,7 @@ const ContactSection = () => {
 
     try {
       // 1. Save to local MongoDB via our backend
-      await fetch("/api/contact", {
+      await fetch(`${API_BASE_URL}/api/contact`, {
         method: "POST",
         body: formData,
       });

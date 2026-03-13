@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageSquare, X, Send, Bot, User } from "lucide-react";
+import { API_BASE_URL } from "@/lib/api-config";
 
 const AIChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,7 +27,7 @@ const AIChatBot = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/chat", {
+      const response = await fetch(`${API_BASE_URL}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: [...messages, userMessage] }),
