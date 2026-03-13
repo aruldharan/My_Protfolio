@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import multer from 'multer';
-import Contact from '../models/Contact';
+import Contact from '../models/Contact.js';
 
 const router = express.Router();
 

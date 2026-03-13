@@ -5,14 +5,16 @@ import SkillsSection from "@/components/SkillsSection";
 import ProjectsSection from "@/components/ProjectsSection";
 import ExperienceSection from "@/components/ExperienceSection";
 import CertificationSection from "../components/CertificationSection";
-import AIChatBot from "../components/AIChatBot";
 import ContactSection from "../components/ContactSection";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
+import MeshBackground from "@/components/MeshBackground";
+import AIChatBot from "@/components/AIChatBot";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="relative min-h-screen">
+      <MeshBackground />
       <Navbar />
       <HeroSection />
       <AboutSection />
@@ -20,10 +22,10 @@ const Index = () => {
       <ProjectsSection />
       <ExperienceSection />
       <CertificationSection />
-      <AIChatBot />
       <ContactSection />
       <Footer />
       <ScrollToTop />
+      <AIChatBot />
     </div>
   );
 };

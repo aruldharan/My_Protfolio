@@ -41,45 +41,55 @@ const ExperienceSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <p className="text-primary font-medium tracking-widest uppercase text-sm mb-3">Journey</p>
-          <h2 className="font-display text-4xl md:text-5xl font-bold mb-12">
+          <p className="text-primary font-bold tracking-[0.2em] uppercase text-xs mb-3">Professional Path</p>
+          <h2 className="font-display text-4xl md:text-6xl font-extrabold mb-16 tracking-tight text-center">
             My <span className="text-gradient-gold">Experience</span>
           </h2>
         </motion.div>
 
         <div className="relative">
-          <div className="absolute left-6 top-0 bottom-0 w-px bg-border md:left-1/2" />
+          {/* Vertical line with gradient */}
+          <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-[2px] bg-gradient-to-b from-primary/50 via-primary/20 to-transparent md:-translate-x-1/2" />
 
           {experiences.map((exp, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, x: i % 2 === 0 ? -50 : 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className={`relative mb-10 md:w-1/2 pl-16 md:pl-0 ${
-                i % 2 === 0 ? "md:pr-12 md:text-right" : "md:ml-auto md:pl-12"
+              transition={{ duration: 0.6, delay: i * 0.1 }}
+              className={`relative mb-16 md:w-1/2 pl-16 md:pl-0 ${
+                i % 2 === 0 ? "md:pr-20 md:text-right ml-0 mr-auto" : "md:ml-auto md:pl-20"
               }`}
             >
-              <div className="absolute left-4 md:left-auto md:right-auto top-1 w-5 h-5 rounded-full border-2 border-primary bg-background z-10"
-                style={i % 2 === 0 ? { right: "-10px", left: "auto" } : { left: "-10px" }}
-              />
+              {/* Timeline Marker */}
+              <div className={`absolute left-4 md:left-auto top-10 w-4 h-4 rounded-full border-[3px] border-primary bg-background z-20 gold-glow ${
+                i % 2 === 0 ? "md:-right-2" : "md:-left-2"
+              }`} />
 
-              <div className="glass rounded-xl p-5 hover-lift">
-                <div className={`flex items-center gap-2 mb-2 ${i % 2 === 0 ? "md:justify-end" : ""}`}>
-                  {exp.type === "work" ? (
-                    <Briefcase size={16} className="text-primary" />
-                  ) : exp.type === "achievement" ? (
-                    <Award size={16} className="text-primary" />
-                  ) : (
-                    <GraduationCap size={16} className="text-primary" />
-                  )}
-                  <span className="text-xs text-primary font-medium">{exp.period}</span>
+              <motion.div 
+                whileHover={{ scale: 1.02 }}
+                className="glass rounded-[32px] p-8 border-white/5 relative group overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                
+                <div className={`flex items-center gap-3 mb-4 relative z-10 ${i % 2 === 0 ? "md:justify-end" : ""}`}>
+                  <div className="p-2.5 rounded-xl bg-primary/10 text-primary">
+                    {exp.type === "work" ? (
+                      <Briefcase size={20} />
+                    ) : exp.type === "achievement" ? (
+                      <Award size={20} />
+                    ) : (
+                      <GraduationCap size={20} />
+                    )}
+                  </div>
+                  <span className="text-[10px] text-primary font-bold uppercase tracking-[0.2em]">{exp.period}</span>
                 </div>
-                <h3 className="font-display font-semibold text-lg">{exp.title}</h3>
-                <p className="text-sm text-primary/80 mb-2">{exp.org}</p>
-                <p className="text-sm text-muted-foreground">{exp.desc}</p>
-              </div>
+                
+                <h3 className="font-display font-bold text-2xl mb-2 relative z-10 group-hover:text-primary transition-colors">{exp.title}</h3>
+                <p className="text-primary/70 text-sm font-bold uppercase tracking-widest mb-4 relative z-10">{exp.org}</p>
+                <p className="text-muted-foreground leading-relaxed text-[15px] font-medium relative z-10">{exp.desc}</p>
+              </motion.div>
             </motion.div>
           ))}
         </div>

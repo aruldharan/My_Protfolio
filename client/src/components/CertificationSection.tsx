@@ -39,18 +39,18 @@ const CertificationSection = () => {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-12"
+          className="mb-16"
         >
-          <p className="text-primary font-medium tracking-widest uppercase text-sm mb-3">Professional Growth</p>
-          <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
+          <p className="text-primary font-bold tracking-[0.2em] uppercase text-xs mb-3">Academic Excellence</p>
+          <h2 className="font-display text-4xl md:text-6xl font-extrabold mb-6 tracking-tight">
             My <span className="text-gradient-gold">Certifications</span>
           </h2>
-          <p className="text-muted-foreground max-w-2xl">
-            A selection of professional certifications and courses I've completed to sharpen my technical skills.
+          <p className="text-muted-foreground max-w-2xl text-lg font-medium leading-relaxed">
+            I continuously invest in learning to stay at the forefront of modern web technologies and best practices.
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {certifications.map((cert, i) => (
             <motion.div
               key={cert.title}
@@ -58,45 +58,51 @@ const CertificationSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              whileHover={{ scale: 1.02 }}
-              className="glass rounded-2xl p-6 flex flex-col h-full hover:border-primary/50 transition-all duration-300 group"
+              whileHover={{ y: -10 }}
+              className="glass rounded-[32px] p-8 flex flex-col h-full border-white/5 relative overflow-hidden group"
             >
-              <div className="flex justify-between items-start mb-4">
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <cert.icon className="text-primary" size={24} />
-                </div>
-                <a
-                  href={cert.link}
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <ExternalLink size={18} />
-                </a>
-              </div>
-
-              <div className="flex items-center gap-2 text-primary text-xs font-semibold uppercase tracking-wider mb-2">
-                <Calendar size={12} />
-                {cert.date}
-              </div>
-
-              <h3 className="font-display text-xl font-bold mb-2 group-hover:text-primary transition-colors">
-                {cert.title}
-              </h3>
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               
-              <p className="text-primary/80 text-sm font-medium mb-3">{cert.issuer}</p>
-              
-              <p className="text-muted-foreground text-sm mb-5 flex-grow">
-                {cert.description}
-              </p>
-
-              <div className="flex flex-wrap gap-2 pt-4 border-t border-border">
-                {cert.skills.map((skill) => (
-                  <div key={skill} className="flex items-center gap-1 text-[10px] bg-secondary px-2 py-1 rounded-md text-secondary-foreground font-medium">
-                    <CheckCircle2 size={10} className="text-primary" />
-                    {skill}
+              <div className="relative z-10 flex flex-col h-full">
+                <div className="flex justify-between items-start mb-6">
+                  <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center gold-glow group-hover:scale-110 transition-transform duration-500">
+                    <cert.icon className="text-primary" size={28} />
                   </div>
-                ))}
+                  <motion.a
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    href={cert.link}
+                    className="p-3 rounded-xl glass border-white/10 text-muted-foreground hover:text-primary transition-colors"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <ExternalLink size={20} />
+                  </motion.a>
+                </div>
+
+                <div className="flex items-center gap-2 text-primary text-[10px] font-bold uppercase tracking-[0.2em] mb-3">
+                  <Calendar size={14} />
+                  {cert.date}
+                </div>
+
+                <h3 className="font-display text-2xl font-bold mb-3 group-hover:text-primary transition-colors leading-tight">
+                  {cert.title}
+                </h3>
+                
+                <p className="text-primary/70 text-sm font-bold mb-4 uppercase tracking-widest">{cert.issuer}</p>
+                
+                <p className="text-muted-foreground text-[15px] mb-8 flex-grow leading-relaxed font-medium">
+                  {cert.description}
+                </p>
+
+                <div className="flex flex-wrap gap-2.5 pt-6 border-t border-white/5">
+                  {cert.skills.map((skill) => (
+                    <div key={skill} className="flex items-center gap-2 text-[10px] bg-white/5 border border-white/5 px-3 py-1.5 rounded-xl text-muted-foreground font-bold uppercase tracking-widest hover:border-primary/20 hover:text-primary transition-colors cursor-default">
+                      <CheckCircle2 size={12} className="text-primary" />
+                      {skill}
+                    </div>
+                  ))}
+                </div>
               </div>
             </motion.div>
           ))}

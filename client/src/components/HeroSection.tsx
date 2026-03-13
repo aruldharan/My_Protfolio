@@ -1,14 +1,34 @@
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { ArrowDown, Github, Linkedin, Twitter, Download, Mail } from "lucide-react";
-import heroBg from "@/assets/hero-bg.jpg";
+import { useEffect, useState, useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { Github, Linkedin, Mail, ChevronRight, Terminal, Sparkles, Download, ArrowDown } from "lucide-react";
 
-const roles = ["Full-Stack Developer", "MERN Stack Enthusiast", "React Developer", "Python Developer"];
+const roles = ["Full-Stack Developer", "MERN Stack Specialist", "React Developer", "Python Enthusiast","Frontend Devloper" ];
+
+const techOrbit = [
+  { slug: "mongodb", color: "#47A248" },
+  { slug: "express", color: "#000000" },
+  { slug: "react", color: "#61DAFB" },
+  { slug: "nodedotjs", color: "#339933" },
+  { slug: "typescript", color: "#3178C6" },
+  { slug: "python", color: "#3776AB" },
+];
 
 const HeroSection = () => {
   const [roleIndex, setRoleIndex] = useState(0);
   const [text, setText] = useState("");
   const [deleting, setDeleting] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePos({
+        x: (e.clientX / window.innerWidth - 0.5) * 20,
+        y: (e.clientY / window.innerHeight - 0.5) * 20,
+      });
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
 
   useEffect(() => {
     const currentRole = roles[roleIndex];
@@ -31,119 +51,159 @@ const HeroSection = () => {
   }, [text, deleting, roleIndex]);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      <div className="absolute inset-0">
-        <img src={heroBg} alt="" className="w-full h-full object-cover opacity-40 dark:opacity-40 light:opacity-20" />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/80 to-background" />
-      </div>
-
-      <div className="absolute top-1/4 right-1/4 w-96 h-96 rounded-full bg-primary/10 blur-[100px] animate-float opacity-50" />
-      <div className="absolute bottom-1/4 left-1/4 w-72 h-72 rounded-full bg-primary/5 blur-[80px] animate-float opacity-30 delay-1000" />
+    <section className="relative min-h-[110vh] flex items-center justify-center pt-32 pb-20 overflow-hidden">
+      {/* Dynamic Mouse-Following Background */}
+      <motion.div 
+        animate={{ x: mousePos.x, y: mousePos.y }}
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120vw] h-[120vh] -z-20 opacity-30"
+        style={{
+          background: "radial-gradient(circle at 50% 50%, hsla(var(--primary-h), var(--primary-s), var(--primary-l), 0.15) 0%, transparent 50%)"
+        }}
+      />
       
-      {/* Animated geometric shapes */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(6)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-[1px] h-[300px] bg-gradient-to-b from-transparent via-primary/20 to-transparent"
-            style={{
-              left: `${15 + i * 15}%`,
-              top: '-10%',
-            }}
-            animate={{
-              y: ['0vh', '120vh'],
-              opacity: [0, 1, 0],
-            }}
-            transition={{
-              duration: 5 + i,
-              repeat: Infinity,
-              delay: i * 2,
-              ease: "linear",
-            }}
-          />
-        ))}
-      </div>
-
-      <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
+      <div className="section-padding w-full max-w-5xl mx-auto flex flex-col items-center text-center relative z-10">
+        
+        {/* Profile "Satellite" Hub - Smaller & Refined */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1, ease: "circOut" }}
+          className="relative mb-32"
         >
-          <p className="text-primary font-medium tracking-widest uppercase text-sm mb-6 h-6">
-            {text}<span className="animate-pulse">|</span>
-          </p>
-          <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-bold leading-tight mb-6">
-            Hi, I'm{" "}
-            <span className="text-gradient-gold">Arul Dharan S</span>
-          </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
-            A passionate fresher developer eager to build beautiful web experiences.
-            I love clean code, modern UI, and learning new technologies every day.
-          </p>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.6 }}
-          className="flex flex-wrap items-center justify-center gap-4 mb-12"
-        >
-          <button
-            onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
-            className="group relative px-8 py-3.5 rounded-xl bg-primary text-primary-foreground font-bold overflow-hidden transition-all gold-glow hover:scale-105 active:scale-95"
-          >
-            <span className="relative z-10">View My Work</span>
-            <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-          </button>
-          <button
-            onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
-            className="px-8 py-3.5 rounded-xl border border-border bg-background/50 backdrop-blur-sm text-foreground font-bold hover:border-primary hover:text-primary transition-all hover:bg-primary/5 active:scale-95"
-          >
-            Get In Touch
-          </button>
-          <a
-            href="/ArulDharan_Resume.pdf.pdf"
-            download="ArulDharan_Resume.pdf"
-            className="px-8 py-3.5 rounded-xl border border-primary/20 text-primary font-bold hover:bg-primary/10 transition-all flex items-center gap-2 active:scale-95"
-          >
-            <Download size={18} className="group-hover:animate-bounce" /> Resume
-          </a>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
-          className="flex items-center justify-center gap-5"
-        >
-          {[
-            { Icon: Github, href: "https://github.com/aruldharan" },
-            { Icon: Linkedin, href: "https://linkedin.com/in/aruldharan" },
-            { Icon: Mail, href: "mailto:aruldharan94@gmail.com" },
-          ].map(({ Icon, href }, i) => (
-            <a
-              key={i}
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-3 rounded-full border border-border text-muted-foreground hover:text-primary hover:border-primary transition-all duration-300"
+          {/* Orbiting Tech Solar System - Refined Radius to avoid text overlap */}
+          {techOrbit.map((tech, i) => (
+            <motion.div
+              key={tech.slug}
+              animate={{ 
+                rotate: 360,
+                x: Math.cos((i * 60 * Math.PI) / 180) * 190,
+                y: Math.sin((i * 60 * Math.PI) / 180) * 70,
+              }}
+              transition={{ 
+                rotate: { duration: 50, repeat: Infinity, ease: "linear" },
+                x: { duration: 0 }, 
+                y: { duration: 0 } 
+              }}
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-9 h-9 glass rounded-xl border-white/10 flex items-center justify-center p-2 gold-glow transition-all hover:scale-125 hover:z-50 cursor-pointer"
             >
-              <Icon size={20} />
-            </a>
+              <img 
+                src={`https://cdn.simpleicons.org/${tech.slug}/${tech.color.replace("#", "")}`} 
+                alt={tech.slug}
+                className="w-full h-full object-contain"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  if (!target.dataset.fallback) {
+                    target.dataset.fallback = "true";
+                    target.src = `https://cdn.simpleicons.org/${tech.slug}`;
+                  } else if (target.dataset.fallback === "true") {
+                    target.dataset.fallback = "tried-all";
+                    target.src = `https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/${tech.slug}.svg`;
+                  }
+                }}
+              />
+            </motion.div>
           ))}
+
+          {/* Central Profile Image - Smaller (w-28) Squircle */}
+          <div className="relative w-28 h-28 group cursor-pointer">
+            <motion.div 
+              animate={{ rotate: 360 }}
+              transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+              className="absolute -inset-3 border border-primary/30 rounded-[32px] border-dashed"
+            />
+            <div className="absolute inset-0 rounded-[32px] glass border border-primary/20 overflow-hidden gold-glow-strong z-10 transition-transform duration-500 group-hover:scale-105">
+              <img 
+                src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&h=400&fit=crop" 
+                alt="Arul Dharan S" 
+                className="w-full h-full object-cover grayscale brightness-90 group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700"
+              />
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Hero Content - Refined Sizes */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="space-y-8"
+        >
+          <div className="space-y-3">
+            <motion.p 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="text-primary font-black tracking-[0.4em] uppercase text-[10px] mb-2"
+            >
+              A Fullstack Developer
+            </motion.p>
+            <h1 className="text-3xl md:text-5xl font-black font-display leading-[1.1] tracking-tighter">
+              Hi  I'am <span className="text-gradient-gold drop-shadow-lg">Arul Dharan.S</span>
+            </h1>
+          </div>
+
+          <div className="flex flex-col items-center gap-5">
+            <div className="inline-flex items-center gap-3 bg-white/5 border border-white/10 px-6 py-3 rounded-2xl glass shadow-inner group transition-all hover:bg-white/10 hover:border-primary/30">
+              <Terminal size={18} className="text-primary" />
+              <span className="text-primary font-display text-lg md:text-xl font-black tracking-tight">{text}</span>
+              <span className="w-1.5 h-6 bg-primary animate-pulse rounded-full" />
+            </div>
+            <p className="text-base md:text-lg text-muted-foreground max-w-xl leading-relaxed font-medium">
+              Driven by <span className="text-foreground font-semibold">innovation</span>, I transform complex ideas into <span className="text-primary underline decoration-primary/20 decoration-2 underline-offset-4 italic">flawless digital realities.</span>
+            </p>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
+            <motion.button 
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
+              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-primary text-primary-foreground font-black text-xs uppercase tracking-[0.2em] gold-glow-strong hover:bg-primary/90 transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-2"
+            >
+              My Work <ChevronRight size={18} />
+            </motion.button>
+            
+            <motion.a 
+              href="/ArulDharan_Resume.pdf"
+              download
+              whileHover={{ scale: 1.05, y: -2, backgroundColor: "hsla(var(--primary), 0.1)" }}
+              whileTap={{ scale: 0.95 }}
+              className="w-full sm:w-auto px-8 py-4 rounded-2xl border border-primary/20 text-foreground font-bold text-xs uppercase tracking-[0.2em] transition-all hover:border-primary/50 flex items-center justify-center gap-2"
+            >
+              Resume <Download size={18} />
+            </motion.a>
+          </div>
+            <div className="flex items-center gap-10 border-l border-white/10 pl-10 h-10 hidden sm:flex">
+               {[
+                 { Icon: Github, href: "https://github.com/aruldharan", label: "Github" },
+                 { Icon: Linkedin, href: "https://linkedin.com/in/aruldharan", label: "LinkedIn" },
+                 { Icon: Mail, href: "mailto:aruldharan94@gmail.com", label: "Email" },
+               ].map(({ Icon, href, label }) => (
+                 <motion.a
+                   key={label}
+                   href={href}
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   whileHover={{ y: -6, scale: 1.25 }}
+                   className="text-muted-foreground hover:text-primary transition-all duration-300"
+                 >
+                   <Icon size={28} />
+                 </motion.a>
+               ))}
+            </div>
         </motion.div>
       </div>
 
+      {/* Scroll Indicator - Adjusted Position */}
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1 }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2"
+        animate={{ y: [0, 8, 0] }} 
+        transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 opacity-20 hover:opacity-100 transition-opacity cursor-pointer z-20"
+        onClick={() => {
+          const el = document.getElementById("about");
+          if (el) el.scrollIntoView({ behavior: "smooth" });
+        }}
       >
-        <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 2 }}>
-          <ArrowDown className="text-muted-foreground" size={20} />
-        </motion.div>
+        <ArrowDown size={24} className="text-primary" />
       </motion.div>
     </section>
   );

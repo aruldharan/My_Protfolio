@@ -24,12 +24,12 @@ router.post('/', async (req: Request, res: Response) => {
         parts: [{ text: msg.content }],
       }));
 
-    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
     const payload = {
       contents: contents,
-      system_instruction: {
-        parts: [{ text: "You are an AI assistant for Arul Dharan S's portfolio. Arul is a dedicated Full-Stack Developer specializing in the MERN stack and TypeScript. \n\nProfile Summary:\nA dedicated and highly motivated Full-Stack Developer with expertise in the MERN stack and TypeScript. Passionate about building scalable web applications with clean, efficient code and intuitive user interfaces. Recently graduated and committed to continuous learning to deliver high-quality software solutions.\n\nContact Details:\n- Phone: +91 8778243567\n- Email: aruldharan94@gmail.com\n- GitHub: github.com/aruldharan\n- LinkedIn: linkedin.com/in/aruldharan\n\nAnswer questions about Arul's skills, projects, and background based on these details. Be professional, concise, and helpful." }]
+      systemInstruction: {
+        parts: [{ text: "You are an AI assistant for Arul Dharan S's portfolio. Arul is a MERN stack developer. \n\nContact Details:\n- Phone: +91 8778243567\n- Email: aruldharan94@gmail.com\n- GitHub: github.com/aruldharan\n- LinkedIn: linkedin.com/in/aruldharan\n\nAnswer questions about Arul's skills, projects, and background based on these details. Be professional, concise, and helpful." }]
       },
       generationConfig: {
         temperature: 0.7,
@@ -51,7 +51,17 @@ router.post('/', async (req: Request, res: Response) => {
 
     if (!response.ok) {
       console.error('Gemini API Error:', JSON.stringify(data, null, 2));
-      throw new Error(data.error?.message || `Gemini API returned ${response.status}`);
+      const status = response.status;
+      const message = data.error?.message || `Gemini API returned ${status}`;
+      
+      if (status === 429) {
+        return res.status(status).json({ error: 'AI limit reached. Please wait a moment and try again.' });
+      }
+      if (status === 403) {
+        return res.status(status).json({ error: 'AI Quota exceeded or restricted. Please check your API key at Google AI Studio.' });
+      }
+      
+      throw new Error(message);
     }
 
     const aiMessage = data.candidates?.[0]?.content?.parts?.[0]?.text;

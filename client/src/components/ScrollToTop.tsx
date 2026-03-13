@@ -19,7 +19,7 @@ const ScrollToTop = () => {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.5 }}
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="fixed bottom-8 right-8 z-50 p-3 rounded-full bg-primary text-primary-foreground gold-glow hover:opacity-90 transition-opacity"
+          className="fixed bottom-8 left-8 z-50 p-4 rounded-full bg-primary text-primary-foreground gold-glow hover:scale-110 active:scale-90 transition-all shadow-2xl"
           aria-label="Scroll to top"
         >
           <ArrowUp size={20} />
