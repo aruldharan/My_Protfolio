@@ -63,9 +63,12 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
         <button 
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} 
-          className="font-display text-3xl font-black tracking-tighter hover:scale-105 transition-transform relative z-[110]"
+          className="group relative z-[110]"
         >
-          <span className="text-gradient-gold">AD</span>
+          <div className="w-12 h-12 rounded-full border-2 border-primary/20 flex items-center justify-center transition-all duration-500 group-hover:border-primary/50 group-hover:scale-110 glass relative overflow-hidden">
+            <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <span className="text-gradient-gold font-black tracking-tighter text-xl relative z-10 transition-transform group-hover:scale-110">AD</span>
+          </div>
         </button>
 
         {/* Desktop Nav */}
