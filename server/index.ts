@@ -21,19 +21,35 @@ app.use(express.json());
 app.use('/api/chat', chatRouter);
 app.use('/api/contact', contactRouter);
 
-// Serve static files from the React app
+import fs from 'fs';
+
+// ... (existing imports)
+
+// Serve static files from the React app if they exist
 const distPath = path.join(__dirname, '../../client/dist');
-app.use(express.static(distPath));
+if (fs.existsSync(distPath)) {
+  app.use(express.static(distPath));
+}
 
 app.get('/api', (req: Request, res: Response) => {
-  res.send('MERN Showcase API is running...');
+  res.json({ message: 'MERN Showcase API is running...', status: 'online' });
 });
 
 // The "catchall" handler: for any request that doesn't
-// match one above, send back React's index.html file.
+// match one above, send back React's index.html file or a status message.
 app.get('*', (req: Request, res: Response) => {
   if (req.path.startsWith('/api')) return res.status(404).json({ error: 'API route not found' });
-  res.sendFile(path.join(distPath, 'index.html'));
+  
+  const indexPath = path.join(distPath, 'index.html');
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    res.json({ 
+      message: 'API is Live!', 
+      note: 'Frontend is hosted separately (e.g., on Vercel). Please visit your frontend URL.',
+      api_endpoints: ['/api/chat', '/api/contact']
+    });
+  }
 });
 
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/mern-showcase';
