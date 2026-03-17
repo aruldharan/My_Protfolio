@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import { ExternalLink, Github, Star } from "lucide-react";
 
 const categories = ["All", "Full-Stack", "Frontend", "Backend"];
@@ -67,6 +67,27 @@ const projects = [
   },
 ];
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, scale: 0.9, y: 20 },
+  visible: { 
+    opacity: 1, 
+    scale: 1,
+    y: 0,
+    transition: { duration: 0.4, ease: "easeOut" }
+  },
+};
+
+
 const ProjectsSection = () => {
   const [active, setActive] = useState("All");
   const filtered = active === "All" ? projects : projects.filter((p) => p.category === active);
@@ -109,16 +130,21 @@ const ProjectsSection = () => {
         </div>
 
         {/* Grid */}
-        <motion.div layout className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <motion.div 
+          layout 
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.05 }}
+          className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 will-change-transform"
+        >
           <AnimatePresence mode="popLayout">
             {filtered.map((project) => (
                 <motion.div
                   key={project.title}
                   layout
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
+                  variants={itemVariants}
                   exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.5, ease: "circOut" }}
                   className="glass rounded-[32px] overflow-hidden group border-white/5 flex flex-col h-full relative"
                 >
                   <div className="relative overflow-hidden aspect-video bg-white/5">

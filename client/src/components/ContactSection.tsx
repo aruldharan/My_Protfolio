@@ -1,7 +1,27 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { Mail, MapPin, Phone, Send } from "lucide-react";
 import { API_BASE_URL } from "@/lib/api-config";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, x: -20 },
+  visible: { 
+    opacity: 1, 
+    x: 0,
+    transition: { duration: 0.6, ease: "easeOut" }
+  },
+};
+
 
 const ContactSection = () => {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
@@ -72,11 +92,15 @@ const ContactSection = () => {
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-5 gap-16 items-start">
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          className="grid lg:grid-cols-5 gap-16 items-start will-change-transform"
+        >
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            variants={itemVariants}
             className="lg:col-span-2 space-y-12"
           >
             <div className="space-y-6">
@@ -106,9 +130,10 @@ const ContactSection = () => {
           </motion.div>
 
           <motion.form
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            variants={{
+              hidden: { opacity: 0, x: 30 },
+              visible: { opacity: 1, x: 0, transition: { duration: 0.6 } }
+            }}
             onSubmit={handleSubmit}
             className="lg:col-span-3 glass rounded-[40px] p-10 space-y-8 border-white/5 relative overflow-hidden gold-glow-strong"
           >
@@ -180,7 +205,7 @@ const ContactSection = () => {
               {loading ? "Transmitting..." : sent ? "Success! Message Received ✓" : <><Send size={18} /> Deploy Message</>}
             </motion.button>
           </motion.form>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

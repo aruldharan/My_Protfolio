@@ -188,7 +188,7 @@
     box-shadow: var(--shadow-elevated);
   }
   .section-padding {
-    @apply py-16 px-6 md:px-12 lg:px-20;
+    @apply py-10 px-6 md:px-12 lg:px-20;
   }
 }
 

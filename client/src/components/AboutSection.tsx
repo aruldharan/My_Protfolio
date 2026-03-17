@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { Code2, Palette, Server, Zap, BookOpen, Rocket } from "lucide-react";
 
 const highlights = [
@@ -9,6 +9,26 @@ const highlights = [
   { icon: BookOpen, label: "Self-Taught", desc: "Continuous learning from docs & courses" },
   { icon: Rocket, label: "Passionate", desc: "Driven to build impactful products" },
 ];
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 15 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.5, ease: "easeOut" }
+  },
+};
+
 
 const AboutSection = () => {
   return (
@@ -44,34 +64,37 @@ const AboutSection = () => {
               Committed to continuous learning and staying updated with the latest industry trends 
               to deliver high-quality, impactful software solutions.
             </p>
-            <div className="flex gap-8 pt-4">
+            <motion.div 
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.2 }}
+              className="flex gap-8 pt-4 will-change-transform"
+            >
               {[
                 { num: "10+", label: "Projects Built" },
                 { num: "2025", label: "Graduate" },
                 { num: "∞", label: "Curiosity" },
               ].map((stat) => (
-                <div key={stat.label}>
+                <motion.div key={stat.label} variants={itemVariants}>
                   <p className="text-3xl font-display font-bold text-gradient-gold">{stat.num}</p>
                   <p className="text-sm text-muted-foreground">{stat.label}</p>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            className="grid grid-cols-1 sm:grid-cols-2 gap-4 will-change-transform"
           >
-            {highlights.map(({ icon: Icon, label, desc }, i) => (
+            {highlights.map(({ icon: Icon, label, desc }) => (
               <motion.div
                 key={label}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: 0.4 + i * 0.1 }}
+                variants={itemVariants}
                 className="glass rounded-2xl p-6 hover-lift group border-primary/5 hover:border-primary/20 bg-primary/5 active:scale-[0.98]"
               >
                 <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-110">

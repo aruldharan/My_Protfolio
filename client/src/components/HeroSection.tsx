@@ -2,16 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Github, Linkedin, Mail, ChevronRight, Terminal, Sparkles, Download, ArrowDown } from "lucide-react";
 
-const roles = ["Full-Stack Developer", "MERN Stack Specialist", "React Developer", "Python Enthusiast","Frontend Devloper" ];
-
-const techOrbit = [
-  { slug: "mongodb", color: "#47A248" },
-  { slug: "express", color: "#000000" },
-  { slug: "react", color: "#61DAFB" },
-  { slug: "nodedotjs", color: "#339933" },
-  { slug: "typescript", color: "#3178C6" },
-  { slug: "python", color: "#3776AB" },
-];
+const roles = ["Full-Stack Developer", "MERN Stack Specialist", "React Developer", "Python Enthusiast", "Frontend Developer"];
 
 const HeroSection = () => {
   const [roleIndex, setRoleIndex] = useState(0);
@@ -51,7 +42,7 @@ const HeroSection = () => {
   }, [text, deleting, roleIndex]);
 
   return (
-    <section className="relative min-h-[110vh] flex items-center justify-center pt-32 pb-20 overflow-hidden">
+    <section id="home" className="relative min-h-[110vh] flex items-center justify-center pt-16 pb-10 overflow-hidden">
       {/* Dynamic Mouse-Following Background */}
       <motion.div 
         animate={{ x: mousePos.x, y: mousePos.y }}
@@ -68,54 +59,15 @@ const HeroSection = () => {
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, ease: "circOut" }}
-          className="relative mb-32"
+          className="relative mb-8"
         >
-          {/* Orbiting Tech Solar System - Refined Radius to avoid text overlap */}
-          {techOrbit.map((tech, i) => (
-            <motion.div
-              key={tech.slug}
-              animate={{ 
-                rotate: 360,
-                x: Math.cos((i * 60 * Math.PI) / 180) * 190,
-                y: Math.sin((i * 60 * Math.PI) / 180) * 70,
-              }}
-              transition={{ 
-                rotate: { duration: 50, repeat: Infinity, ease: "linear" },
-                x: { duration: 0 }, 
-                y: { duration: 0 } 
-              }}
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-9 h-9 glass rounded-xl border-white/10 flex items-center justify-center p-2 gold-glow transition-all hover:scale-125 hover:z-50 cursor-pointer"
-            >
+          {/* Central Profile Image - Simple Circular */}
+          <div className="relative w-48 h-48 group cursor-pointer">
+            <div className="absolute inset-0 rounded-full glass border border-primary/20 overflow-hidden shadow-2xl z-10 transition-transform duration-500">
               <img 
-                src={`https://cdn.simpleicons.org/${tech.slug}/${tech.color.replace("#", "")}`} 
-                alt={tech.slug}
-                className="w-full h-full object-contain"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  if (!target.dataset.fallback) {
-                    target.dataset.fallback = "true";
-                    target.src = `https://cdn.simpleicons.org/${tech.slug}`;
-                  } else if (target.dataset.fallback === "true") {
-                    target.dataset.fallback = "tried-all";
-                    target.src = `https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/${tech.slug}.svg`;
-                  }
-                }}
-              />
-            </motion.div>
-          ))}
-
-          {/* Central Profile Image - Smaller (w-28) Squircle */}
-          <div className="relative w-28 h-28 group cursor-pointer">
-            <motion.div 
-              animate={{ rotate: 360 }}
-              transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-              className="absolute -inset-3 border border-primary/30 rounded-[32px] border-dashed"
-            />
-            <div className="absolute inset-0 rounded-[32px] glass border border-primary/20 overflow-hidden gold-glow-strong z-10 transition-transform duration-500 group-hover:scale-105">
-              <img 
-                src="/ARUL-PIC.jpg" 
+                src="/My_Profile.jpeg" 
                 alt="Arul Dharan S" 
-                className="w-full h-full object-cover grayscale brightness-90 group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700"
+                className="w-full h-full object-cover brightness-95 transition-all duration-700"
               />
             </div>
           </div>
@@ -148,7 +100,7 @@ const HeroSection = () => {
               <span className="w-1.5 h-6 bg-primary animate-pulse rounded-full" />
             </div>
             <p className="text-base md:text-lg text-muted-foreground max-w-xl leading-relaxed font-medium">
-              Driven by <span className="text-foreground font-semibold">innovation</span>, I transform complex ideas into <span className="text-primary underline decoration-primary/20 decoration-2 underline-offset-4 italic">flawless digital realities.</span>
+              Driven by <span className="text-foreground font-semibold">innovation</span>, I transform complex ideas into <span className="text-primary underline decoration-primary/20 decoration-2 underline-offset-4 italic">fast, reliable, and user-focused applications..</span>
             </p>
           </div>
 
@@ -167,7 +119,7 @@ const HeroSection = () => {
               download
               whileHover={{ scale: 1.05, y: -2, backgroundColor: "hsla(var(--primary), 0.1)" }}
               whileTap={{ scale: 0.95 }}
-              className="w-full sm:w-auto px-8 py-4 rounded-2xl border border-primary/20 text-foreground font-bold text-xs uppercase tracking-[0.2em] transition-all hover:border-primary/50 flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-8 py-4 rounded-2xl border border-dashed border-primary/40 text-foreground font-bold text-xs uppercase tracking-[0.2em] transition-all hover:border-primary/60 flex items-center justify-center gap-2 bg-white/5"
             >
               Resume <Download size={18} />
             </motion.a>

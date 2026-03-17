@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { Briefcase, GraduationCap, Award } from "lucide-react";
 
 const experiences = [
@@ -23,14 +23,34 @@ const experiences = [
     period: "2025 Jul - 2026 Jan",
     desc: "Successfully built and deployed multiple production-ready applications, mastering React, Node.js, MongoDB, and Redux with advanced TypeScript patterns.",
   },
-  {
-    type: "work",
-    title: "Freelance Developer / Open Source Contributor",
-    org: "Global Tech Community",
-    period: "2023 - Present",
-    desc: "Collaborating with clients and contributing to open-source projects, focusing on building performant UI/UX and scalable backend solutions.",
-  },
+  // {
+  //   type: "work",
+  //   title: "Freelance Developer / Open Source Contributor",
+  //   org: "Global Tech Community",
+  //   period: "2023 - Present",
+  //   desc: "Collaborating with clients and contributing to open-source projects, focusing on building performant UI/UX and scalable backend solutions.",
+  // },
 ];
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.5, ease: "easeOut" }
+  },
+};
+
 
 const ExperienceSection = () => {
   return (
@@ -47,17 +67,23 @@ const ExperienceSection = () => {
           </h2>
         </motion.div>
 
-        <div className="relative">
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          className="relative will-change-transform"
+        >
           {/* Vertical line with gradient */}
           <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-[2px] bg-gradient-to-b from-primary/50 via-primary/20 to-transparent md:-translate-x-1/2" />
 
           {experiences.map((exp, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, x: i % 2 === 0 ? -50 : 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: i * 0.1 }}
+              variants={{
+                hidden: { opacity: 0, x: i % 2 === 0 ? -50 : 50 },
+                visible: { opacity: 1, x: 0, transition: { duration: 0.6 } }
+              }}
               className={`relative mb-16 md:w-1/2 pl-16 md:pl-0 ${
                 i % 2 === 0 ? "md:pr-20 md:text-right ml-0 mr-auto" : "md:ml-auto md:pl-20"
               }`}
@@ -83,7 +109,7 @@ const ExperienceSection = () => {
                       <GraduationCap size={20} />
                     )}
                   </div>
-                  <span className="text-[10px] text-primary font-bold uppercase tracking-[0.2em]">{exp.period}</span>
+                  <span className="text-primary font-bold uppercase tracking-[0.2em]">{exp.period}</span>
                 </div>
                 
                 <h3 className="font-display font-bold text-2xl mb-2 relative z-10 group-hover:text-primary transition-colors">{exp.title}</h3>
@@ -92,7 +118,7 @@ const ExperienceSection = () => {
               </motion.div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

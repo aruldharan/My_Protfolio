@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { Award, ExternalLink, Calendar, CheckCircle2 } from "lucide-react";
 
 const certifications = [
@@ -31,6 +31,25 @@ const certifications = [
   },
 ];
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 15 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.5, ease: "easeOut" }
+  },
+};
+
 const CertificationSection = () => {
   return (
     <section id="certifications" className="section-padding">
@@ -50,14 +69,17 @@ const CertificationSection = () => {
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {certifications.map((cert, i) => (
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 will-change-transform"
+        >
+          {certifications.map((cert) => (
             <motion.div
               key={cert.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
+              variants={itemVariants}
               whileHover={{ y: -10 }}
               className="glass rounded-[32px] p-8 flex flex-col h-full border-white/5 relative overflow-hidden group"
             >
@@ -106,7 +128,7 @@ const CertificationSection = () => {
               </div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

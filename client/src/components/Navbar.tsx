@@ -1,39 +1,60 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ChevronRight } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 import { AccentSwitcher } from "./AccentSwitcher";
 
-const navItems = ["About", "Skills", "Projects", "Certifications", "Experience", "Contact"];
+const navItems = ["About", "Skills", "Projects", "Experience", "Certifications", "Contact"];
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
+  const navRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
 
-    // Active section tracking
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (navRef.current && !navRef.current.contains(target)) {
+        setMobileOpen(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    document.addEventListener("click", handleClickOutside, { capture: true });
+
+    // Precise section tracking
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
+            const id = entry.target.id;
+            if (id === "home") {
+              setActiveSection("");
+            } else {
+              setActiveSection(id);
+            }
           }
         });
       },
-      { threshold: 0.5, rootMargin: "-10% 0px -40% 0px" }
+      { 
+        threshold: 0, 
+        rootMargin: "-45% 0px -45% 0px" // Very focused trigger zone at the middle of the screen
+      }
     );
 
-    navItems.forEach((item) => {
-      const el = document.getElementById(item.toLowerCase());
+    ["home", ...navItems.map(item => item.toLowerCase())].forEach((id) => {
+      const el = document.getElementById(id);
       if (el) observer.observe(el);
     });
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      document.removeEventListener("click", handleClickOutside, { capture: true });
       observer.disconnect();
     };
   }, []);
@@ -45,131 +66,116 @@ const Navbar = () => {
         top: el.offsetTop - 100,
         behavior: "smooth",
       });
+      // Force active state for immediate feedback
+      setActiveSection(id.toLowerCase());
     }
     setMobileOpen(false);
   };
 
   return (
-    <motion.nav
-      initial={{ y: -100, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-      className={`fixed top-0 left-0 right-0 z-[9999] transition-all duration-500 ${
-        scrolled 
-          ? "glass py-4 border-b border-white/5 shadow-2xl shadow-black/40" 
-          : "py-8 border-b border-transparent"
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
+    <div className="fixed top-4 left-0 right-0 z-[9999] flex justify-center px-4 pointer-events-none">
+      <motion.nav
+        ref={navRef}
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        className={`pointer-events-auto flex items-center gap-2 px-4 py-2 rounded-full border border-black/5 dark:border-white/5 transition-all duration-700 shadow-xl ${
+          scrolled 
+            ? "bg-white/80 dark:bg-black/60 shadow-black/10 dark:shadow-black/50 scale-95" 
+            : "bg-white/40 dark:bg-black/20"
+        }`}
+      >
+        {/* Logo/Home Button */}
         <button 
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} 
-          className="group relative z-[110]"
+          className="w-10 h-10 rounded-full border border-primary/20 flex items-center justify-center transition-all duration-500 hover:border-primary hover:scale-110 relative overflow-hidden shrink-0 group bg-white/10 dark:bg-transparent"
         >
-          <div className="w-12 h-12 rounded-full border-2 border-primary/30 dark:border-primary/20 flex items-center justify-center transition-all duration-500 group-hover:border-primary group-hover:scale-110 glass relative overflow-hidden shadow-lg shadow-black/5 dark:shadow-none">
-            <div className="absolute inset-0 bg-primary/10 dark:bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-            <span className="text-gradient-gold font-black tracking-tighter text-xl relative z-10 transition-transform group-hover:scale-110">AD</span>
-          </div>
+          <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+          <span className="text-gradient-gold font-black text-sm relative z-10">AD</span>
         </button>
 
-        {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-10">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-2xl glass border-white/5">
-            {navItems.map((item) => (
+        {/* Desktop Nav Items */}
+        <div className="hidden md:flex items-center gap-1">
+          {navItems.map((item) => {
+            const isActive = activeSection === item.toLowerCase();
+            return (
               <button
                 key={item}
                 onClick={() => scrollTo(item)}
-                className={`text-[10px] font-bold uppercase tracking-widest px-4 py-2 rounded-xl transition-all duration-300 relative group ${
-                  activeSection === item.toLowerCase() 
-                    ? "text-primary bg-white/5" 
-                    : "text-muted-foreground hover:text-primary"
+                className={`text-[10px] font-extrabold uppercase tracking-widest px-4 py-2 rounded-full transition-all duration-500 relative group overflow-visible ${
+                  isActive 
+                    ? "text-primary" 
+                    : "text-black/40 dark:text-white/30 hover:text-black dark:hover:text-white"
                 }`}
               >
-                {item}
-                {activeSection === item.toLowerCase() && (
-                  <motion.span 
-                    layoutId="nav-active"
-                    className="absolute -bottom-1 left-4 right-4 h-[2px] bg-primary rounded-full"
-                  />
+                <span 
+                  className={`relative z-10 transition-all duration-500 uppercase ${
+                    isActive ? "drop-shadow-[0_0_12px_hsl(var(--primary)/0.6)]" : ""
+                  }`}
+                >
+                  {item}
+                </span>
+                
+                {/* Subtle Hover Underline */}
+                {!isActive && (
+                  <span className="absolute bottom-1 left-4 right-4 h-[2px] bg-primary/0 group-hover:bg-primary/30 rounded-full transition-all duration-300" />
                 )}
               </button>
-            ))}
+            );
+          })}
+        </div>
+
+        {/* Separator */}
+        <div className="hidden md:block w-px h-6 bg-black/5 dark:bg-white/10 mx-2" />
+
+        {/* Controls */}
+        <div className="flex items-center gap-2">
+          <div className="scale-90 opacity-80 hover:opacity-100 transition-opacity">
+            <AccentSwitcher />
+          </div>
+          <div className="scale-90 opacity-80 hover:opacity-100 transition-opacity">
+            <ThemeToggle />
           </div>
           
-          <div className="flex items-center gap-4">
-            <AccentSwitcher />
-            <ThemeToggle />
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => scrollTo("Contact")}
-              className="px-6 py-3 rounded-xl bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-[0.2em] gold-glow hover:bg-primary/90 transition-all shadow-xl shadow-primary/20"
-            >
-              Hire Me
-            </motion.button>
-          </div>
-        </div>
-
-        {/* Mobile menu toggle */}
-        <div className="md:hidden flex items-center gap-4 relative z-[110]">
-          <AccentSwitcher />
-          <ThemeToggle />
+          {/* Mobile Toggle */}
           <button 
-            className="p-3 rounded-2xl glass border-white/10 text-foreground" 
+            className="md:hidden p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 text-black dark:text-white transition-colors"
             onClick={() => setMobileOpen(!mobileOpen)}
           >
-            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
-      </div>
 
-      {/* Mobile Nav Menu - Fixed Overlay */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            initial={{ opacity: 0, x: "100%" }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: "100%" }}
-            transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed inset-0 z-[105] md:hidden bg-background/95 backdrop-blur-2xl flex flex-col p-12 pt-32 gap-6"
-          >
-            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
-            
-            {navItems.map((item) => (
-              <motion.button
-                key={item}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.1 }}
-                onClick={() => scrollTo(item)}
-                className={`w-full text-left py-4 px-6 rounded-2xl text-xl font-bold uppercase tracking-[0.2em] transition-all flex items-center justify-between group ${
-                  activeSection === item.toLowerCase() 
-                    ? "text-primary bg-white/5 border border-primary/20" 
-                    : "text-muted-foreground hover:text-primary"
-                }`}
-              >
-                {item}
-                <ChevronRight size={20} className={`transition-transform ${activeSection === item.toLowerCase() ? "translate-x-0 opacity-100" : "-translate-x-4 opacity-0 group-hover:translate-x-0 group-hover:opacity-100"}`} />
-              </motion.button>
-            ))}
-            
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="mt-auto flex flex-col gap-4"
+        {/* Mobile Nav Overlay */}
+        <AnimatePresence>
+          {mobileOpen && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              className="fixed top-24 left-4 right-4 z-[9998] md:hidden bg-white dark:bg-[#0A0A0A] rounded-[32px] p-6 flex flex-col gap-3 border border-black/5 dark:border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.3)] pointer-events-auto"
             >
-              <button
-                onClick={() => scrollTo("Contact")}
-                className="w-full py-6 rounded-3xl bg-primary text-primary-foreground font-black uppercase tracking-[0.3em] text-xs shadow-2xl shadow-primary/30 gold-glow-strong"
-              >
-                Hire Me Now
-              </button>
-              <p className="text-center text-[10px] uppercase font-bold tracking-widest text-muted-foreground/40">Available WorldWide</p>
+              {navItems.map((item) => {
+                const isActive = activeSection === item.toLowerCase();
+                return (
+                  <button
+                    key={item}
+                    onClick={() => scrollTo(item)}
+                    className={`w-full text-left py-4 px-6 rounded-2xl text-xs font-bold uppercase tracking-[0.2em] transition-all relative ${
+                      isActive 
+                        ? "text-primary bg-primary/5 dark:bg-primary/10 border border-primary/20" 
+                        : "text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white"
+                    }`}
+                  >
+                    {item}
+                  </button>
+                );
+              })}
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.nav>
+          )}
+        </AnimatePresence>
+      </motion.nav>
+    </div>
   );
 };
 
